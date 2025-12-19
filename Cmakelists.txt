@@ -1,0 +1,35 @@
+cmake_minimum_required(VERSION 3.10)
+project(SolarDataCatcher VERSION 1.0.0)
+
+# Настройки компилятора
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Находим libcurl
+find_package(CURL REQUIRED)
+
+# Находим nlohmann/json
+find_package(nlohmann_json 3.2.0 REQUIRED)
+
+# Создаем исполняемый файл с именем solar-watcher
+add_executable(solar-watcher main.cpp)  # Изменено имя
+
+# Подключаем зависимости
+target_link_libraries(solar-watcher PRIVATE  # Изменено имя
+    ${CURL_LIBRARIES}
+    nlohmann_json::nlohmann_json
+)
+
+# Включаем директории заголовков
+target_include_directories(solar-watcher PRIVATE  # Изменено имя
+    ${CURL_INCLUDE_DIRS}
+)
+
+# Настройки для релизной сборки (оптимизации)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_options(solar-watcher PRIVATE -O3 -DNDEBUG)  # Изменено имя
+endif()
